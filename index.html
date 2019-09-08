@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>implementasi 2 dimensi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+box-sizing: border-box;
+}
+body {
+background:#eaeaea;
+margin:0;
+padding:0;
+}
+#stage {
+border:4px solid white;
+border-radius:5px;
+position: relative;
+width:136px;
+height:136px;
+background:white;
+margin:50px auto;
+}
+.cell {
+border:1px solid white;
+border-radius:50%;
+width:32px;
+height:32px;
+position: absolute;
+padding: 5px;
+text-align:center;
+color: white;
+}
+.a {
+background: hotpink;
+}
+.a::before {
+content:"🤕";
+}
+.b {
+background: blue;
+}
+.c {
+background: yellow;
+}
+.c::before {
+content:"💀";
+}
+.d {
+background: lightgreen;
+}
+.d::before {
+content:"👽";
+}
+.b::before {
+content:"🏔";
+}
+</style>
+</head>
+<body>
+<h1 style="text-align:center;">My Project</h1>
+<div id="stage"></div>
+<script>
+var stage = document.querySelector("#stage");
+
+var mapGame = [
+[0,1,3,0],
+[1,2,2,0],
+[3,1,3,2],
+[0,3,2,1]
+];
+
+var el_class = function (x) { var a = document.getElementsByClassName(x); return a; }
+var row = mapGame.length;
+var column = mapGame[0].length;
+var size = 32;
+var ide = new Array;
+var save_row = new Array;
+var save_column = new Array;
+var save_map = new Array;
+ide[0] = 0;
+
+init_map();
+//Membuat control
+function control(index) {
+var ROW = parseInt(index.getAttribute("row"));
+var COLUMN = parseInt(index.getAttribute("column"));
+var MAP = parseInt(index.getAttribute("map"));
+ide[0]++;
+if(ide[0] == 1) {
+ save_row[0] = ROW;
+ save_column[0] = COLUMN;
+ save_map[0] = MAP;
+}
+else if(ide[0] == 2) {
+ save_row[1] = ROW;
+ save_column[1] = COLUMN;
+ save_map[1] = MAP;
+ 
+ //Validasi control
+ if(save_row[0] == 0) {
+ if(save_row[1] == 1 || save_row[1] == 0) {
+ mapGame[save_row[0]][save_column[0]] = save_map[1];
+ mapGame[save_row[1]][save_column[1]] = save_map[0];
+ init_map(); }
+ if(save_row[1] > 1) {
+ alert("Wrong Block");
+  }
+ }
+ if(save_row[0] == 1) {
+ if(save_row[1] == 0 || save_row[1] == 1 || save_row[1] == 2) {
+ mapGame[save_row[0]][save_column[0]] = save_map[1];
+ mapGame[save_row[1]][save_column[1]] = save_map[0];
+ init_map();
+  }
+ if(save_row[1] == 3) {
+ alert("Wrong block");
+  }
+ }
+ 
+ if(save_row[0] == 2) {
+ if(save_row[1] == 1 || save_row[1] == 2 || save_row[1] == 3) {
+ mapGame[save_row[0]][save_column[0]] = save_map[1];
+ mapGame[save_row[1]][save_column[1]] = save_map[0];
+ init_map(); }
+ if(save_row[1] == 0) {
+ alert("Wrong block");
+  }
+ }
+ 
+ if(save_row[0] == 3) {
+ if(save_row[1] == 2 || save_row[1] == 3) {
+ mapGame[save_row[0]][save_column[0]] = save_map[1];
+ mapGame[save_row[1]][save_column[1]] = save_map[0];
+ init_map(); }
+ if(save_row[1] == 0 || save_row[1] == 1) {
+ alert("Wrong block");
+  }
+ }//Logic map created By Yuswan Kurniawan
+ for(var i=0; i < 4; i++) {
+ if(mapGame[0][0] == i && mapGame[1][0] == i && mapGame[2][0] == i && mapGame[3][0] == i) {
+ hide_el([0,1,2,3],[0,0,0,0]);
+ }
+ 
+ else if(mapGame[0][1] == i && mapGame[1][1] == i && mapGame[2][1] == i && mapGame[3][1] == i) {
+ hide_el([0,1,2,3],[1,1,1,1]);
+ }
+ 
+ else if(mapGame[0][2] == i && mapGame[1][2] == i && mapGame[2][2] == i && mapGame[3][2] == i) {
+ hide_el([0,1,2,3],[2,2,2,2]);
+ }
+ 
+ else if(mapGame[0][3] == i && mapGame[1][3] == i && mapGame[2][3] == i && mapGame[3][3] == i) {
+ hide_el([0,1,2,3],[3,3,3,3]);
+ }
+ //horizontal
+ else if(mapGame[0][0] == i && mapGame[0][1] == i && mapGame[0][2] == i && mapGame[0][3] == i) {
+ hide_el([0,0,0,0],[0,1,2,3]);
+ }
+ 
+ else if(mapGame[1][0] == i && mapGame[1][1] == i && mapGame[1][2] == i && mapGame[1][3] == i) {
+ hide_el([1,1,1,1],[0,1,2,3]);
+ }
+ 
+ else if(mapGame[2][0] == i && mapGame[2][1] == i && mapGame[2][2] == i && mapGame[2][3] == i) {
+ hide_el([2,2,2,2],[0,1,2,3]);
+ }
+ 
+ else if(mapGame[3][0] == i && mapGame[3][1] == i && mapGame[3][2] == i && mapGame[3][3] == i) {
+ hide_el([3,3,3,3],[0,1,2,3]);
+ }
+ }
+ setTimeout(function () {
+ ide[0] = 0;
+   }, 500);
+  }
+ }
+ 
+ function hide_el(arrRow=[], arrCol=[]) {
+ setTimeout(function () {
+    mapGame[arrRow[0]][arrCol[0]] = -1;
+    mapGame[arrRow[1]][arrCol[1]] = -1;
+    mapGame[arrRow[2]][arrCol[2]] = -1;
+    mapGame[arrRow[3]][arrCol[3]] = -1;
+    init_map(); }, 500);
+ }
+ 
+function init_map() {
+if(stage.hasChildNodes()) {
+ for(var el =0; el < row * column; el++) {
+  stage.removeChild(stage.firstChild);
+ }
+}
+for(var rows=0; rows < row; rows++) {
+ for(var columns=0; columns < column; columns++) {
+  var element = document.createElement("div");
+  stage.appendChild(element);
+  switch(mapGame[rows][columns]) {
+  case 0:
+  element.setAttribute("class","cell a");
+  element.setAttribute("map", 0);
+  break;
+  case 1:
+  element.setAttribute("class","cell b");
+  element.setAttribute("map", 1);
+  break;
+  case 2:
+  element.setAttribute("class","cell c");
+  element.setAttribute("map", 2);
+  break;
+  case 3:
+  element.setAttribute("class","cell d");
+  element.setAttribute("map", 3);
+  break;
+  case -1:
+  element.setAttribute("style","display:none;");
+  break;
+  }
+  element.setAttribute("row", rows);
+  element.setAttribute("column", columns);
+  element.setAttribute("onclick","control(this)");
+  element.style.top = rows * size +"px";
+  element.style.left = columns * size +"px";
+  }
+ }
+}
+
+</script>
+</body>
+</html>
